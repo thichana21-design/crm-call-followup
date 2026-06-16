@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { statusLabel } from "@/lib/format";
 import { getSession } from "@/lib/auth";
+import Pagination from "@/components/Pagination";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -139,13 +140,7 @@ export default async function CustomersPage({
         </table>
       </div>
 
-      {pages > 1 && (
-        <div style={{ display: "flex", gap: 8, marginTop: 16, alignItems: "center", justifyContent: "center" }}>
-          {page > 1 && <Link href={qs({ page: page - 1 })} className="btn btn-ghost">← ก่อนหน้า</Link>}
-          <span style={{ fontSize: 14, color: "#64748b" }}>หน้า {page} / {pages}</span>
-          {page < pages && <Link href={qs({ page: page + 1 })} className="btn btn-ghost">ถัดไป →</Link>}
-        </div>
-      )}
+      <Pagination page={page} pages={pages} total={total} pageSize={PAGE_SIZE} makeHref={(p) => qs({ page: p })} />
     </div>
   );
 }

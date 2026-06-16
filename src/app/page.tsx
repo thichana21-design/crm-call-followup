@@ -99,11 +99,11 @@ export default async function Dashboard({
       <DateRangeFilter basePath="/" range={range} />
 
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 26 }}>
-        <Kpi label="ลูกค้าทั้งหมด" value={baht(totals.customers)} sub={`${rows.length} เว็บ`} icon="👥" accent="#6366f1" />
-        <Kpi label="โทรติดตาม" value={baht(totals.calls)} sub={`รับสาย ${pct(answerRate)}`} icon="📞" accent="#0ea5e9" />
-        <Kpi label="ส่ง SMS" value={baht(totals.sms)} icon="💬" accent="#8b5cf6" />
-        <Kpi label="กลับมาฝาก" value={baht(totals.returned)} sub={`${pct(totals.customers ? totals.returned / totals.customers : 0)} ของลูกค้า`} icon="✅" accent="#10b981" />
-        <Kpi label="ยอดกลับมาฝากรวม" value={`฿${baht(totals.depositTotal)}`} icon="💰" accent="#f59e0b" />
+        <Kpi label="ลูกค้าทั้งหมด" value={baht(totals.customers)} sub={`${rows.length} เว็บ`} icon="👥" accent="#4338ca" />
+        <Kpi label="โทรติดตาม" value={baht(totals.calls)} sub={`รับสาย ${pct(answerRate)}`} icon="📞" accent="#0369a1" />
+        <Kpi label="ส่ง SMS" value={baht(totals.sms)} icon="💬" accent="#6d28d9" />
+        <Kpi label="กลับมาฝาก" value={baht(totals.returned)} sub={`${pct(totals.customers ? totals.returned / totals.customers : 0)} ของลูกค้า`} icon="✅" accent="#047857" />
+        <Kpi label="ยอดกลับมาฝากรวม" value={`฿${baht(totals.depositTotal)}`} icon="💰" accent="#b45309" />
       </div>
 
       <div className="card" style={{ overflow: "hidden" }}>
@@ -129,18 +129,18 @@ export default async function Dashboard({
                   <td style={{ fontWeight: 600 }}>
                     <Link href={`/brands/${r.id}`} style={{ color: "#2563eb" }}>{r.name}</Link>
                   </td>
-                  <td style={{ textAlign: "right" }}>{baht(r.customers)}</td>
-                  <td style={{ textAlign: "right" }}>{baht(r.calls)}</td>
-                  <td style={{ textAlign: "right" }}>{baht(r.answered)}</td>
+                  <td style={{ textAlign: "right", fontWeight: 600 }}>{baht(r.customers)}</td>
+                  <td style={{ textAlign: "right", color: "#94a3b8" }}>{baht(r.calls)}</td>
+                  <td style={{ textAlign: "right", color: "#94a3b8" }}>{baht(r.answered)}</td>
                   <td style={{ textAlign: "right" }}>
                     <span className={`badge ${r.answerRate >= 0.35 ? "badge-green" : r.answerRate >= 0.25 ? "badge-amber" : "badge-red"}`}>
                       {pct(r.answerRate)}
                     </span>
                   </td>
-                  <td style={{ textAlign: "right" }}>{baht(r.noAnswer)}</td>
-                  <td style={{ textAlign: "right" }}>{baht(r.sms)}</td>
-                  <td style={{ textAlign: "right", fontWeight: 600, color: "#166534" }}>{baht(r.returned)}</td>
-                  <td style={{ textAlign: "right", fontWeight: 600 }}>฿{baht(r.depositTotal)}</td>
+                  <td style={{ textAlign: "right", color: "#94a3b8" }}>{baht(r.noAnswer)}</td>
+                  <td style={{ textAlign: "right", color: "#94a3b8" }}>{baht(r.sms)}</td>
+                  <td style={{ textAlign: "right", fontWeight: 700, color: "#059669" }}>{baht(r.returned)}</td>
+                  <td style={{ textAlign: "right", fontWeight: 700, color: "#0f172a" }}>฿{baht(r.depositTotal)}</td>
                 </tr>
               ))}
             </tbody>

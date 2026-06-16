@@ -3,6 +3,7 @@ import { baht, fmtDate, outcomeLabel } from "@/lib/format";
 import { parseRange, dateWhere } from "@/lib/date";
 import { getSession } from "@/lib/auth";
 import DateRangeFilter from "@/components/DateRangeFilter";
+import Pagination from "@/components/Pagination";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -83,19 +84,19 @@ export default async function CallsPage({
       <DateRangeFilter basePath="/calls" range={range} extra={{ brand: sp.brand, outcome: sp.outcome }} />
 
       <div style={{ display: "flex", gap: 14, marginBottom: 18, flexWrap: "wrap" }}>
-        <div className="card" style={{ padding: "12px 18px", minWidth: 140 }}>
-          <div style={{ fontSize: 12, color: "#64748b" }}>โทรทั้งหมด</div>
-          <div style={{ fontSize: 22, fontWeight: 800 }}>{total.toLocaleString()}</div>
+        <div className="card" style={{ padding: "12px 18px", minWidth: 150, borderLeft: "4px solid #2563eb", background: "linear-gradient(120deg, #2563eb14, #ffffff 72%)" }}>
+          <div style={{ fontSize: 12, color: "#64748b", display: "flex", alignItems: "center", gap: 6 }}><span>📞</span>โทรทั้งหมด</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#1e3a8a", marginTop: 2 }}>{total.toLocaleString()}</div>
         </div>
-        <div className="card" style={{ padding: "12px 18px", minWidth: 140 }}>
-          <div style={{ fontSize: 12, color: "#64748b" }}>รับสาย</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#047857" }}>
-            {answered.toLocaleString()} <span style={{ fontSize: 13, color: "#94a3b8" }}>({total ? ((answered / total) * 100).toFixed(0) : 0}%)</span>
+        <div className="card" style={{ padding: "12px 18px", minWidth: 150, borderLeft: "4px solid #059669", background: "linear-gradient(120deg, #05966914, #ffffff 72%)" }}>
+          <div style={{ fontSize: 12, color: "#64748b", display: "flex", alignItems: "center", gap: 6 }}><span>✅</span>รับสาย</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#047857", marginTop: 2 }}>
+            {answered.toLocaleString()} <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>({total ? ((answered / total) * 100).toFixed(0) : 0}%)</span>
           </div>
         </div>
-        <div className="card" style={{ padding: "12px 18px", minWidth: 140 }}>
-          <div style={{ fontSize: 12, color: "#64748b" }}>ส่ง SMS</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#7c3aed" }}>{sms.toLocaleString()}</div>
+        <div className="card" style={{ padding: "12px 18px", minWidth: 150, borderLeft: "4px solid #7c3aed", background: "linear-gradient(120deg, #7c3aed14, #ffffff 72%)" }}>
+          <div style={{ fontSize: 12, color: "#64748b", display: "flex", alignItems: "center", gap: 6 }}><span>💬</span>ส่ง SMS</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#6d28d9", marginTop: 2 }}>{sms.toLocaleString()}</div>
         </div>
       </div>
 
@@ -144,13 +145,7 @@ export default async function CallsPage({
         </table>
       </div>
 
-      {pages > 1 && (
-        <div style={{ display: "flex", gap: 8, marginTop: 16, alignItems: "center", justifyContent: "center" }}>
-          {page > 1 && <Link href={qs({ page: page - 1 })} className="btn btn-ghost">← ก่อนหน้า</Link>}
-          <span style={{ fontSize: 14, color: "#64748b" }}>หน้า {page} / {pages}</span>
-          {page < pages && <Link href={qs({ page: page + 1 })} className="btn btn-ghost">ถัดไป →</Link>}
-        </div>
-      )}
+      <Pagination page={page} pages={pages} total={total} pageSize={PAGE_SIZE} makeHref={(p) => qs({ page: p })} />
     </div>
   );
 }
