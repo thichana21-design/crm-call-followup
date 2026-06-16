@@ -1,0 +1,7 @@
+crm.db
+crm.db-journal
+data/db_snapshot.json
+data/import.json
+scripts/export_xlsx.py
+*.xlsx
+.env
