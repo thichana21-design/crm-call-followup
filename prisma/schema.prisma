@@ -1,0 +1,144 @@
+// CRM โทรติดตามลูกค้า — ฐานข้อมูล
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Brand {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  customers Customer[]
+}
+
+model Agent {
+  id             Int        @id @default(autoincrement())
+  name           String     @unique
+  username       String?    @unique
+  passwordHash   String?
+  email          String?
+  role           String     @default("agent") // admin | lead | agent
+  isActive       Boolean    @default(true)
+  phone          String?    // สำหรับรับรหัสชั่วคราวผ่าน SMS
+  telegramChatId String?    // สำหรับรับรหัสชั่วคราวผ่าน Telegram
+  calls          Call[]
+  assigned       Customer[] @relation("AssignedCustomers")
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  brand       Brand     @relation(fields: [brandId], references: [id])
+  brandId     Int
+  phone       String
+  name        String?
+  status      String    @default("active") // active | returned | lost | do_not_call
+  note        String?
+  nextCallAt  DateTime? // นัดโทรกลับครั้งถัดไป (เก็บเป็น UTC)
+  createdAt   DateTime  @default(now())
+  assignedAgent   Agent?  @relation("AssignedCustomers", fields: [assignedAgentId], references: [id])
+  assignedAgentId Int?
+  calls       Call[]
+  deposits    Deposit[]
+  bonuses     BonusAdjustment[]
+  statusLogs  StatusChangeLog[]
+
+  @@unique([brandId, phone])
+  @@index([phone])
+  @@index([status])
+  @@index([assignedAgentId])
+  @@index([nextCallAt])
+}
+
+model Call {
+  id         Int      @id @default(autoincrement())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  agent      Agent?   @relation(fields: [agentId], references: [id])
+  agentId    Int?
+  calledAt   DateTime
+  callTime   String?  // เวลาที่โทร เช่น "12:49"
+  outcome    String   // answered | no_answer | unreachable | refused
+  smsSent       Boolean  @default(false)
+  smsTemplateId Int?     // template SMS ที่ใช้ (ถ้ามี)
+  note          String?
+  createdAt     DateTime @default(now())
+
+  @@index([customerId])
+  @@index([calledAt])
+}
+
+model SmsTemplate {
+  id        Int      @id @default(autoincrement())
+  name      String   // ชื่อเรียก เช่น "ทวงรัก + โปร 20%"
+  body      String   // เนื้อความ มีตัวแปร {{เว็บ}} {{เบอร์}} {{โปร}}
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([active, sortOrder])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model Deposit {
+  id          Int      @id @default(autoincrement())
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  Int
+  depositDate DateTime
+  loggedIn    Boolean  @default(false)
+  amount      Float    @default(0)
+
+  @@index([customerId])
+  @@index([depositDate])
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  agentId   Int?     // ผู้ทำ (Agent) — denormalize ชื่อไว้ด้วยกัน log ไม่หายตอนลบผู้ใช้
+  agentName String?
+  action    String   // เช่น "customer.status_change", "deposit.create"
+  entity    String   // เช่น "Customer", "Agent"
+  entityId  Int?
+  before    Json?    // เฉพาะ field ที่เปลี่ยน
+  after     Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@index([agentId])
+  @@index([action])
+}
+
+model StatusChangeLog {
+  id            Int      @id @default(autoincrement())
+  customer      Customer @relation(fields: [customerId], references: [id])
+  customerId    Int
+  fromStatus    String
+  toStatus      String
+  reason        String?
+  changedById   Int?
+  changedByName String?
+  createdAt     DateTime @default(now())
+
+  @@index([customerId])
+}
+
+model BonusAdjustment {
+  id         Int      @id @default(autoincrement())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  adjustedAt DateTime?
+  amount     Float    @default(0)
+
+  @@index([customerId])
+}
