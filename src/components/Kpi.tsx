@@ -5,7 +5,7 @@ export default function Kpi({
     <div className="card" style={{
       padding: 18, flex: 1, minWidth: 170, position: "relative", overflow: "hidden",
       background: `linear-gradient(150deg, ${accent}4d 0%, ${accent}24 55%, ${accent}14 100%)`,
-      borderColor: `${accent}80`,
+      borderColor: "#e6eaf1",
     }}>
       <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 5, background: accent }} />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
