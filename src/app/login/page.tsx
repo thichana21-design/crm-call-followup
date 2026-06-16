@@ -45,12 +45,6 @@ export default function LoginPage() {
         <div style={{ marginTop: 14, textAlign: "center" }}>
           <a href="/forgot" style={{ fontSize: 13, color: "#4338ca", fontWeight: 600 }}>ลืมรหัสผ่าน?</a>
         </div>
-
-        <div style={{ marginTop: 18, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
-          บัญชีทดสอบ:<br />
-          admin / admin123 — ผู้จัดการ<br />
-          agent1 / agent123 — แอดมิน
-        </div>
       </form>
     </div>
   );
